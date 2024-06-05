@@ -1,5 +1,8 @@
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+import matplotlib.pyplot as plt
 
 # Define directories for training and validation data
 train_dir = 'path/to/train'
@@ -33,9 +36,6 @@ val_generator = val_datagen.flow_from_directory(
     class_mode='binary'
 )
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
-
 model = Sequential([
     Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)),
     MaxPooling2D((2, 2)),
@@ -51,9 +51,15 @@ model = Sequential([
 
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# Plot training and validation accuracy and loss
-import matplotlib.pyplot as plt
+history = model.fit(
+    train_generator,
+    steps_per_epoch=train_generator.samples // train_generator.batch_size,
+    validation_data=val_generator,
+    validation_steps=val_generator.samples // val_generator.batch_size,
+    epochs=20
+)
 
+# Plot training and validation accuracy and loss
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
 loss = history.history['loss']
@@ -74,13 +80,5 @@ plt.plot(epochs_range, val_loss, label='Validation Loss')
 plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.show()
-
-history = model.fit(
-    train_generator,
-    steps_per_epoch=train_generator.samples // train_generator.batch_size,
-    validation_steps=val_generator.samples // val_generator.batch_size,
-    epochs=20,
-    validation_data=val_generator
-)
 
 model.save('oral_cancer_detection_model.h5')
