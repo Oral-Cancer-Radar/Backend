@@ -4,11 +4,9 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 import matplotlib.pyplot as plt
 
-# Define directories for training and validation data
 train_dir = 'path/to/train'
 val_dir = 'path/to/val'
 
-# Image data generators with data augmentation
 train_datagen = ImageDataGenerator(
     rescale=1./255,
     rotation_range=20,
@@ -59,7 +57,7 @@ history = model.fit(
     epochs=20
 )
 
-# Plot training and validation accuracy and loss
+
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
 loss = history.history['loss']
