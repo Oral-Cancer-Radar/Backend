@@ -81,5 +81,3 @@ plt.show()
 
 model.save('oral_cancer_detection_model.h5')
 
-
-# ignore this comment, testing git&disc webhooks
